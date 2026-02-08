@@ -30,6 +30,7 @@ def plot_time(data,signal_freq,signal_freq2,sample_freq,split,direct,N):
     plt.scatter(x,in_phase,c="green",s=5)
     plt.plot(x,quad,c="red",label="Quadrature")
     plt.scatter(x,quad,c="red",label="Quadrature",s=5)
+    plt.xlim(0,1e-5)
     
   # For Real Data
   else:
@@ -44,7 +45,7 @@ def plot_time(data,signal_freq,signal_freq2,sample_freq,split,direct,N):
 
   
   # Set Title
-  if signal_freq2 == Empty:
+  if signal_freq2 == None:
     plt.title(f"{signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
   elif split:
     plt.title(f"Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
