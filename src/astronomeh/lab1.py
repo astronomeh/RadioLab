@@ -51,7 +51,7 @@ def plot_time(data,signal_freq,signal_freq2,sample_freq,split,direct,N):
   elif split:
     plt.title(f"Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
   else:
-    plt.title(f"Mixed {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Mixed {signal_freq} Mhz LO and {signal_freq2} Mhz RF Signal sampled at {sample_freq/1e6} Mhz")
 
   plt.xlabel("Time (1e-5 s)")
   plt.ylabel("Amplitude (Arbitrary Voltage Units)")
@@ -64,11 +64,11 @@ def plot_volt(data,signal_freq,signal_freq2,sample_freq,split,direct):
 
   # Set Title
   if signal_freq2 == Empty:
-    plt.title(f"{signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Voltage Spectrum of {signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
   elif split:
-    plt.title(f"Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Voltage Spectrum of Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal")
   else:
-    plt.title(f"Mixed {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Voltage Spectrum of Mixed {signal_freq} Mhz LO and {signal_freq2} Mhz RF Signal")
 
 
 
@@ -77,9 +77,8 @@ def plot_pow(data,signal_freq,signal_freq2,sample_freq,split,direct):
 
   # Set Title
   if signal_freq2 == Empty:
-    plt.title(f"{signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Power Spectrum of {signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
   elif split:
-    plt.title(f"Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Power Spectrum of Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal")
   else:
-    plt.title(f"Mixed {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
-
+    plt.title(f"Power Spectrum of Mixed {signal_freq} Mhz LO and {signal_freq2} Mhz RF Signal")
