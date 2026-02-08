@@ -29,9 +29,9 @@ def plot_time(data,signal_freq,signal_freq2,sample_freq,split,direct,N):
     plt.plot(x,in_phase,c="green",label="In-Phase")
     plt.scatter(x,in_phase,c="green",s=5)
     plt.plot(x,quad,c="red",label="Quadrature")
-    plt.scatter(x,quad,c="red",label="Quadrature",s=5)
+    plt.scatter(x,quad,c="red",s=5)
     plt.xlim(0,1e-5)
-    plt.legend()
+    plt.legend(loc="upper right")
     
   # For Real Data
   else:
