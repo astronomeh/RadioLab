@@ -31,6 +31,7 @@ def plot_time(data,signal_freq,signal_freq2,sample_freq,split,direct,N):
     plt.plot(x,quad,c="red",label="Quadrature")
     plt.scatter(x,quad,c="red",label="Quadrature",s=5)
     plt.xlim(0,1e-5)
+    plt.legend()
     
   # For Real Data
   else:
@@ -52,6 +53,8 @@ def plot_time(data,signal_freq,signal_freq2,sample_freq,split,direct,N):
   else:
     plt.title(f"Mixed {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
 
+  plt.xlabel("Time (1e-5 s)")
+  plt.ylabel("Amplitude (Arbitrary Voltage Units)")
   plt.show()
 
 
