@@ -52,7 +52,7 @@ def plot_time(data,signal_freq,signal_freq2,sample_freq,split,direct,N):
     plt.title(f"Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
   else:
     plt.title(f"Mixed {signal_freq} Mhz LO and {signal_freq2} Mhz RF Signal sampled at {sample_freq/1e6} Mhz")
-
+  plt.grid()
   plt.xlabel("Time (1e-5 s)")
   plt.ylabel("Amplitude (Arbitrary Voltage Units)")
   plt.show()
