@@ -10,7 +10,7 @@ def test():
 
 
 # Create time plot
-def plot_time(data,signal_freq,signal_freq2,sample_freq,split,direct,N):
+def plot_time(data=None,usbdata=None,lsbdata=None,signal_freq,signal_freq2=None,usb_freq=None,Lsb_freq=None,sample_freq,split,direct,N):
   
   # Length of observation
   T = N/sample_freq
@@ -21,15 +21,20 @@ def plot_time(data,signal_freq,signal_freq2,sample_freq,split,direct,N):
   # For Complex Data
   if not direct:
     # Separate Complex Components
-    in_phase = data[1,:,0]
-    quad = data[1,:,1]
-
+    usbin_phase = usbdata[1,:,0]
+    usbquad = usbdata[1,:,1]
+    lsbin_phase = lsbdata[1,:,0]
+    lsbquad = lsbdata[1,:,1]
     # Plot
     plt.figure()
-    plt.plot(x,in_phase,c="green",label="In-Phase")
-    plt.scatter(x,in_phase,c="green",s=5)
-    plt.plot(x,quad,c="red",label="Quadrature")
-    plt.scatter(x,quad,c="red",s=5)
+    plt.plot(x,usbin_phase,c="black",label="USB In-Phase")
+    plt.scatter(x,usbin_phase,c="black",s=5)
+    plt.plot(x,lsbin_phase,c="black","--",label="LSB In-Phase")
+    plt.scatter(x,lsbin_phase,c="black",s=5)
+    plt.plot(x,usbquad,c="green",label="USB Quadrature")
+    plt.scatter(x,usbquad,c="green",s=5)
+    plt.plot(x,lsbquad,c="red",label="LSB Quadrature")
+    plt.scatter(x,lsbquad,c="red",s=5)
     plt.xlim(0,1e-5)
     plt.legend(loc="upper right")
     
@@ -51,7 +56,7 @@ def plot_time(data,signal_freq,signal_freq2,sample_freq,split,direct,N):
   elif split:
     plt.title(f"Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
   else:
-    plt.title(f"Mixed {signal_freq} Mhz LO and {signal_freq2} Mhz RF Signal sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Mixed {signal_freq} Mhz LO and {usb_freq}/{lsbfreq} Mhz RF Signals sampled at {sample_freq/1e6} Mhz")
   plt.grid()
   plt.xlabel("Time (1e-5 s)")
   plt.ylabel("Amplitude (Arbitrary Voltage Units)")
