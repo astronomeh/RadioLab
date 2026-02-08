@@ -10,7 +10,7 @@ def test():
 
 
 # Create time plot
-def plot_time(data=None,usbdata=None,lsbdata=None,signal_freq,signal_freq2=None,usb_freq=None,Lsb_freq=None,sample_freq,split,direct,N):
+def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None):
   
   # Length of observation
   T = N/sample_freq
