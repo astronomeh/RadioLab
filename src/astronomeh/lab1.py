@@ -27,7 +27,7 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
     lsbquad = lsbdata[1,:,1]
     # Plot
     plt.figure()
-    plt.plot(x,usbin_phase,c="black",label="USB In-Phase")
+    plt.plot(x,usbin_phase,c="black",label="USB In-Phase",ls="--")
     plt.scatter(x,usbin_phase,c="black",s=5)
     plt.plot(x,usbquad,c="green",label="USB Quadrature")
     plt.scatter(x,usbquad,c="green",s=5)
