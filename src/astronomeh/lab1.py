@@ -119,7 +119,7 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     datafft = np.fft.fftshift(np.fft.fft(data, n=N))
     pow = np.abs(datafft)**2
     mask = (freq >= 0) & (freq <= sample_freq/2)
-    fpk_hz = _peak_from_spectrum(freq[mask], P[mask])
+    fpk_hz = _peak_from_spectrum(freq[mask], pow[mask])
     ax.plot(freq / 1e6, pow,c="red")
     ax.scatter(freq / 1e6, pow, s=5,c="cornflowerblue")
     ax.axvline(x=-sample_freq / 2e6, c="black", ls="--")
