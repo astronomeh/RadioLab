@@ -123,11 +123,11 @@ def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None
     
   # Set Title
   if signal_freq2 == None and usb_freq == None:
-    ax.title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
+    ax.set_title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
   elif split:
-    ax.title(f"Power Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
+    ax.set_title(f"Power Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
   else:
-    ax.title(f"Power Spectrum of Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals Sampled at {sample_freq/1e6}MHz")
+    ax.set_title(f"Power Spectrum of Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals Sampled at {sample_freq/1e6}MHz")
   ax.set_xlabel("Frequency (MHz)")
   ax.set_ylabel("log Power (Arbitrary Units)")
   ax.grid(True)
