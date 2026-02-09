@@ -262,6 +262,7 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
   ax.plot(fs_theory_mhz, fs_theory_mhz/2, "--", lw=2, alpha=0.9, label=r"$f_s/2$",c="red")
   ax.plot(fs_theory_mhz, fobs_theory_mhz, lw=2, label=r"Theory $f_{obs}$",c="green")
   ax.scatter(fs_meas_mhz, fobs_meas_mhz, s=25, c="black", label="Measured peaks", zorder=5)
+  ax.axhline(1, linestyle="--", linewidth=1.5, alpha=0.8)
 
   # highlight closest to sample_freq argument
   i = int(np.argmin(np.abs(fs_meas_hz - float(sample_freq))))
