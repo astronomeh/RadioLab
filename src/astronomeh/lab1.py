@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os, re, io, zipfile
 
 
 # Package Installation Test
@@ -126,3 +127,143 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     ax.set_ylabel("log Power (Arbitrary Units)")
     ax.grid(True)
 
+def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
+                    data=None, usbdata=None, lsbdata=None,
+                    signal_freq2=None, usb_freq=None, lsb_freq=None,
+                    ax=None, show=False):
+  """
+  f_obs vs f_s (aliasing) plot.
+
+  Usage (directory scan):
+    plot_fobs_vs_fs(signal_freq=1.0, sample_freq=2.4e6, data=r"PATH/TO/DATA", ax=ax)
+
+  Conventions (matches your lab1 titles):
+    - signal_freq is in MHz
+    - sample_freq is in Hz
+    - plots are in MHz
+  """
+
+  if ax is None:
+    fig, ax = plt.subplots()
+
+  # ---- only intended for REAL captures in a directory ----
+  if usb_freq is not None:
+    raise ValueError("plot_fobs_vs_fs is for real-data directory scans. (usb_freq/lsb_freq not used here.)")
+
+  if data is None or not isinstance(data, str):
+    raise ValueError("Pass the DATA DIRECTORY as `data=...` (a string path).")
+
+  data_dir = data
+
+  # ---------- helpers ----------
+  def _parse_fs_from_name(fn):
+    # expects digital_sin_<fs>....npz where <fs> is in Hz (e.g. 2400000) or possibly with decimal
+    m = re.search(r"digital_sin_([0-9]+(?:\.[0-9]+)?)", fn)
+    return float(m.group(1)) if m else None
+
+  def _load_first_array(fp):
+    # robust: some npz store arrays as inner .npy members
+    if fp.lower().endswith(".npy"):
+      arr = np.load(fp, allow_pickle=True)
+      if getattr(arr, "dtype", None) == object:
+        arr = np.asarray(arr.tolist(), dtype=float)
+      return arr
+
+    with zipfile.ZipFile(fp, "r") as zf:
+      npy_names = [n for n in zf.namelist() if n.lower().endswith(".npy")]
+      if not npy_names:
+        raise ValueError(f"No .npy arrays found inside {fp}")
+      raw = zf.read(npy_names[0])
+
+    arr = np.load(io.BytesIO(raw), allow_pickle=True)
+    if getattr(arr, "dtype", None) == object:
+      arr = np.asarray(arr.tolist(), dtype=float)
+    return arr
+
+  def _peak_freq_hz(x, fs_hz, N_use):
+    x = np.asarray(x).ravel()
+    N_eff = min(int(N_use), x.size)
+    x = x[:N_eff]
+
+    x0 = x - np.mean(x)
+    w = np.hanning(N_eff)
+    xw = x0 * w
+
+    V = np.fft.fft(xw)
+    P = np.abs(V) ** 2
+    f = np.fft.fftfreq(N_eff, d=1.0/fs_hz)
+
+    mask = (f >= 0) & (f <= fs_hz/2)
+    if not np.any(mask):
+      return np.nan
+
+    k = np.argmax(P[mask])
+    return float(f[mask][k])
+
+  # ---------- scan directory, measure peaks ----------
+  pts = []
+  for fn in os.listdir(data_dir):
+    if not (fn.startswith("digital_sin_") and fn.lower().endswith(".npz")):
+      continue
+
+    fs_hz = _parse_fs_from_name(fn)
+    if fs_hz is None:
+      continue
+
+    fp = os.path.join(data_dir, fn)
+    arr = _load_first_array(fp)
+
+    # your real-data convention: signal is in arr[1] :contentReference[oaicite:1]{index=1}
+    x = arr[1] if (hasattr(arr, "ndim") and arr.ndim >= 2) else arr
+    fpk = _peak_freq_hz(x, fs_hz, N)
+
+    pts.append((fs_hz, fpk))
+
+  if len(pts) == 0:
+    raise ValueError(f"No digital_sin_*.npz files found in: {data_dir}")
+
+  pts = np.array(sorted(pts, key=lambda r: r[0]), dtype=float)
+  fs_meas_hz = pts[:, 0]
+  fobs_meas_hz = pts[:, 1]
+
+  # ---------- theory zig-zag using your mod formula ----------
+  f0_hz = float(signal_freq) * 1e6
+
+  fs_min = np.min(fs_meas_hz) * 0.9
+  fs_max = np.max(fs_meas_hz) * 1.1
+  fs_theory_hz = np.geomspace(max(1e3, fs_min), fs_max, 1200)
+
+  fobs_theory_hz = np.abs(((f0_hz + fs_theory_hz/2) % fs_theory_hz) - fs_theory_hz/2)
+
+  # ---------- plot (MHz) ----------
+  fs_theory_mhz = fs_theory_hz / 1e6
+  fobs_theory_mhz = fobs_theory_hz / 1e6
+
+  fs_meas_mhz = fs_meas_hz / 1e6
+  fobs_meas_mhz = fobs_meas_hz / 1e6
+
+  # envelope fs/2 (in MHz)
+  ax.plot(fs_theory_mhz, fs_theory_mhz/2, "--", lw=2, alpha=0.9, label=r"$f_s/2$")
+  # zig-zag theory
+  ax.plot(fs_theory_mhz, fobs_theory_mhz, lw=2, label=r"Theory $f_{obs}$")
+  # measured points
+  ax.scatter(fs_meas_mhz, fobs_meas_mhz, s=25, c="black", label="Measured peaks", zorder=5)
+
+  # highlight dot closest to the sample_freq argument
+  i = int(np.argmin(np.abs(fs_meas_hz - float(sample_freq))))
+  ax.scatter(fs_meas_mhz[i], fobs_meas_mhz[i], s=70, c="#D4AF37", edgecolor="black",
+             label=f"highlight fs={sample_freq/1e6:.2f} MHz", zorder=6)
+
+  # formatting
+  ax.set_xscale("log")
+  ax.set_xlabel("Sampling frequency $f_s$ (MHz)")
+  ax.set_ylabel("Observed frequency $f_{obs}$ (MHz)")
+  ax.set_title(r"$f_{obs}$ vs $f_s$ (Aliasing)")
+  ax.grid(True, which="both", ls="--", alpha=0.5)
+  ax.legend(loc="best")
+
+  if show:
+    plt.show()
+
+  # returning the measured points can be handy
+  return fs_meas_hz, fobs_meas_hz
