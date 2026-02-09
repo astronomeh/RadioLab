@@ -177,15 +177,19 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
     N_eff = min(int(N_use), x.size)
     x = x[:N_eff]
 
+    # DC offset removal
     x0 = x - np.mean(x)
+  
+    # Hann window
     w = np.hanning(N_eff)
     xw = x0 * w
 
+    # FFT power
     V = np.fft.fft(xw)
     P = np.abs(V) ** 2
     f = np.fft.fftfreq(N_eff, d=1.0/fs_hz)
 
-    # only keep [0, fs/2]
+    # consider only [0, fs/2]
     mask = (f >= 0) & (f <= fs_hz/2)
     fpos = f[mask]
     Ppos = P[mask]
@@ -193,18 +197,16 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
     # strongest bin
     k1 = int(np.argmax(Ppos))
 
-    # if it's exactly 0 Hz, use next-highest
+    # if peak is at 0 Hz, use next-highest
     if fpos[k1] == 0.0:
-      # indices of bins sorted by power descending
-      order = np.argsort(Ppos)[::-1]
-      # first nonzero-frequency bin in that ordering
+      order = np.argsort(Ppos)[::-1]  # descending power
       for k in order:
         if fpos[k] != 0.0:
           return float(fpos[k])
-      # fallback if somehow everything is zero
-      return 0.0
+      return 0.0  # fallback
 
     return float(fpos[k1])
+
 
   # ---- scan directory ----
   pts = []
