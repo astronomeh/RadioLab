@@ -10,11 +10,12 @@ def test():
 
 
 # Create time plot
-def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None):
-  
+def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
+  if ax is None:
+    fig, ax = plt.subplots()
   # Length of observation
   T = N/sample_freq
-
+  
   # Time axis
   x = np.linspace(0,T,N)
   
@@ -26,39 +27,36 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
     lsbin_phase = lsbdata[1,:,0]
     lsbquad = lsbdata[1,:,1]
     # Plot
-    plt.figure()
-    plt.plot(x,lsbin_phase,c="black",label="In-Phase",ls="--")
-    plt.scatter(x,lsbin_phase,c="black",s=5)
-    plt.plot(x,usbquad,c="cornflowerblue",label=f"USB Quadrature {usb_freq}MHz")
-    plt.scatter(x,usbquad,c="cornflowerblue",s=5)
-    plt.plot(x,lsbquad,c="red",label=f"LSB Quadrature {lsb_freq}MHz")
-    plt.scatter(x,lsbquad,c="red",s=5)
-    plt.xlim(0,5e-6)
-    plt.legend(loc="upper right")
+    ax.plot(x,lsbin_phase,c="black",label="In-Phase",ls="--")
+    ax.scatter(x,lsbin_phase,c="black",s=5)
+    ax.plot(x,usbquad,c="cornflowerblue",label=f"USB Quadrature {usb_freq}MHz")
+    ax.scatter(x,usbquad,c="cornflowerblue",s=5)
+    ax.plot(x,lsbquad,c="red",label=f"LSB Quadrature {lsb_freq}MHz")
+    ax.scatter(x,lsbquad,c="red",s=5)
+    ax.set_xlim(0,5e-6)
+    ax.legend(loc="upper right")
     
   # For Real Data
   else:
     data=data[1]
     
     # Plot
-    plt.figure()
-    plt.plot(x,data,c="black")
-    plt.scatter(x,data,c="red",s=5)
+    ax.plot(x,data,c="black")
+    ax.scatter(x,data,c="red",s=5)
 
   
 
   
   # Set Title
   if signal_freq2 == None and usb_freq == None:
-    plt.title(f"{signal_freq}MHz Signal Sampled at {sample_freq/1e6}Mhz")
+    ax.set_title(f"{signal_freq}MHz Signal Sampled at {sample_freq/1e6}Mhz")
   elif split:
-    plt.title(f"Combined {signal_freq}MHz and {signal_freq2}Mhz Signal sampled at {sample_freq/1e6}Mhz")
+    ax.set_title(f"Combined {signal_freq}MHz and {signal_freq2}Mhz Signal sampled at {sample_freq/1e6}Mhz")
   else:
-    plt.title(f"Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals sampled at {sample_freq/1e6}Mhz")
-  plt.grid()
-  plt.xlabel("Time (1e-6 s)")
-  plt.ylabel("Amplitude (Arbitrary Voltage Units)")
-  plt.show()
+    ax.set_title(f"Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals sampled at {sample_freq/1e6}Mhz")
+  ax.grid(True)
+  ax.set_xlabel("Time (1e-6 s)")
+  ax.set_ylabel("Amplitude (Arbitrary Voltage Units)")
 
 
 
@@ -67,11 +65,11 @@ def plot_volt(data,signal_freq,signal_freq2,sample_freq,split,direct):
 
   # Set Title
   if signal_freq2 == None and usb_freq == None:
-    plt.title(f"Voltage Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}Mhz")
+    ax.set_title(f"Voltage Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}Mhz")
   elif split:
-    plt.title(f"Voltage Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
+    ax.set_title(f"Voltage Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
   else:
-    plt.title(f"Voltage Spectrum of Mixed {signal_freq}MHz LO and {signal_freq2/1e6}Mhz RF Signal")
+    ax.set_title(f"Voltage Spectrum of Mixed {signal_freq}MHz LO and {signal_freq2/1e6}Mhz RF Signal")
 
 
 
@@ -109,15 +107,15 @@ def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None
     usbpow = np.abs(usbfft)**2
     lsbpow = np.abs(lsbfft)**2
 
-    plt.plot(usbx/1e6, usbpow,c="cornflowerblue",label=f"USB {usb_freq}MHz")
-    plt.scatter(usbx/1e6, usbpow,c="cornflowerblue", s=5)
-    plt.plot(lsbx/1e6, lsbpow,c="red", alpha=0.3,label=f"LSB {lsb_freq}MHz")
-    plt.scatter(lsbx/1e6, lsbpow,c="red",s=5)
-    plt.axvline(x=-sample_freq/2e6,c="black",ls="--")
-    plt.axvline(x=sample_freq/2e6,c="black",ls="--")
-    plt.axvline(x=0,c="black")
-    plt.yscale("log")
-    plt.legend(loc="lower left")
+    ax.plot(usbx/1e6, usbpow,c="cornflowerblue",label=f"USB {usb_freq}MHz")
+    ax.scatter(usbx/1e6, usbpow,c="cornflowerblue", s=5)
+    ax.plot(lsbx/1e6, lsbpow,c="red", alpha=0.3,label=f"LSB {lsb_freq}MHz")
+    ax.scatter(lsbx/1e6, lsbpow,c="red",s=5)
+    ax.axvline(x=-sample_freq/2e6,c="black",ls="--")
+    ax.axvline(x=sample_freq/2e6,c="black",ls="--")
+    ax.axvline(x=0,c="black")
+    ax.set_yscale("log")
+    ax.legend(loc="lower left")
     
     
   else:
