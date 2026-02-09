@@ -76,12 +76,50 @@ def plot_volt(data,signal_freq,signal_freq2,sample_freq,split,direct):
 
 
 # Create Power Spectrum
-def plot_pow(data,signal_freq,signal_freq2,sample_freq,split,direct):
+def plot_pow(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None):
+  if not direct:
+    usbin_phase = usbdata[1,:,0]
+    usbquad = usbdata[1,:,1]
+    lsbin_phase = lsbdata[1,:,0]
+    lsbquad = lsbdata[1,:,1]
 
+    usbz = usbin_phase+1j*usbquad
+    lsbz = lsbin_phase+1j*lsbquad
+
+    usbfft = np.fft.fft(usbz)
+    lsbfft = np.fft.fft(lsbz)
+    ts = 1/sample_freq
+    usbfreq = np.fft.fftfreq(N,d=ts)
+    usbfreq = np.fft.fftshift(usbfreq)
+    usbfft = np.fft.fftshift(usbfft)
+    usbfreq = np.fft.fftfreq(N,d=ts)
+    usbfreq = np.fft.fftshift(usbfreq)
+    lsbfft = np.fft.fftshift(lsbfft)
+
+    usbx = usbfreq
+    lsbx = lsbfreq
+
+    usbmask = usbx>=0
+    lsbmask = lsbx>=0
+    usbpow = np.abs(usbfft)**2
+    lsbpow = np.abs(lsffft)**2
+
+    plt.plot(usbx, usbpow,c="cornflowerblue",alpha=0.7)
+    plt.scatter(usbx, usbpow,c="cornflowerblue")
+    plt.plot(lsbx, lsbpow,c="red", alpha=0.7)
+    plt.scatter(lsbx, lsbpow,c="red")
+    plt.axvline(x=-sample_freq/2,c="black")
+    plt.axvline(x=sample_freq/2,c="black")
+    
+  else:
+    data = data[1]
+    
   # Set Title
-  if signal_freq2 == Empty:
+  if signal_freq2 == Empty and usb_freq == None:
     plt.title(f"Power Spectrum of {signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
   elif split:
     plt.title(f"Power Spectrum of Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal")
   else:
     plt.title(f"Power Spectrum of Mixed {signal_freq} Mhz LO and {signal_freq2} Mhz RF Signal")
+
+  plt.show()
