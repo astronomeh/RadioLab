@@ -77,16 +77,16 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
         usbdata_arr = np.asarray(usbdata)
         lsbdata_arr = np.asarray(lsbdata)
 
-    if usbdata_arr.ndim == 3 and usbdata_arr.shape[-1] >= 2:
-        usbin_phase = np.asarray(usbdata_arr[1, :, 0]).ravel()
-        usbquad = np.asarray(usbdata_arr[1, :, 1]).ravel()
-        lsbin_phase = np.asarray(lsbdata_arr[1, :, 0]).ravel()
-        lsbquad = np.asarray(lsbdata_arr[1, :, 1]).ravel()
-        usbz = usbin_phase + 1j * usbquad
-        lsbz = lsbin_phase + 1j * lsbquad
-    else:
-        usbz = np.asarray(usbdata_arr[1, :]).ravel()
-        lsbz = np.asarray(lsbdata_arr[1, :]).ravel()
+    	if usbdata_arr.ndim == 3 and usbdata_arr.shape[-1] >= 2:
+        	usbin_phase = np.asarray(usbdata_arr[1, :, 0]).ravel()
+        	usbquad = np.asarray(usbdata_arr[1, :, 1]).ravel()
+        	lsbin_phase = np.asarray(lsbdata_arr[1, :, 0]).ravel()
+        	lsbquad = np.asarray(lsbdata_arr[1, :, 1]).ravel()
+        	usbz = usbin_phase + 1j * usbquad
+        	lsbz = lsbin_phase + 1j * lsbquad
+    	else:
+        	usbz = np.asarray(usbdata_arr[1, :]).ravel()
+        	lsbz = np.asarray(lsbdata_arr[1, :]).ravel()
 
     N_eff = min(int(N), usbz.size, lsbz.size)
     usbz = usbz[:N_eff]
