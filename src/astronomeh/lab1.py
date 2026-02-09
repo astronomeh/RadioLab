@@ -10,8 +10,8 @@ def test():
 
 # Create time plot
 def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
-  if ax is None:
-    fig, ax = plt.subplots()
+	if ax is None:
+	fig, ax = plt.subplots()
   # Length of observation
   T = N/sample_freq
   
@@ -92,7 +92,7 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     usbz = usbz[:N_eff]
     lsbz = lsbz[:N_eff]
 
-      else:
+	else:
     # --- pull real signal ---
     data = np.asarray(data[1]).ravel()
 
