@@ -92,8 +92,8 @@ def plot_pow(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbda
     usbfreq = np.fft.fftfreq(N,d=ts)
     usbfreq = np.fft.fftshift(usbfreq)
     usbfft = np.fft.fftshift(usbfft)
-    usbfreq = np.fft.fftfreq(N,d=ts)
-    usbfreq = np.fft.fftshift(usbfreq)
+    lsbfreq = np.fft.fftfreq(N,d=ts)
+    lsbfreq = np.fft.fftshift(lsbfreq)
     lsbfft = np.fft.fftshift(lsbfft)
 
     usbx = usbfreq
