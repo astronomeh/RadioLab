@@ -104,6 +104,12 @@ def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None
 
     usbmask = usbx>=0
     lsbmask = lsbx>=0
+    
+    usbx = usbx[usbmask]
+    usbpow = usbpow[usbmask]
+    lsbx = lsbx[lsbmask]
+    lsbpow = lsbpow[lsbmask]
+    
     usbpow = np.abs(usbfft)**2
     lsbpow = np.abs(lsbfft)**2
 
