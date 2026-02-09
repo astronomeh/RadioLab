@@ -60,8 +60,8 @@ def plot_volt(signal_freq,sample_freq,split=False,N=4096,data=None,usbdata=None,
   data = np.fft.fft(data)
   
   ts = 1.0 / sample_freq
-  freq = np.fft.fftshift(np.fft.fftfreq(len(data[1]), d=ts))
-  mag = np.fft.fftshift(np.abs(fft_data))
+  freq = np.fft.fftshift(np.fft.fftfreq(N, d=ts))
+  mag = np.fft.fftshift(np.abs(data))
   mask = (freq >= 0) & (freq <= fs/2)
   ax.plot(freq[mask], data, c="green")
   ax.scatter(freq[mask], mag[mask],c="red")
