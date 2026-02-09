@@ -83,7 +83,7 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
 
   if ax is None:
     fig, ax = plt.subplots()
-
+  #complex
   if usb_freq is not None:
     usbdata_arr = np.asarray(usbdata)
     lsbdata_arr = np.asarray(lsbdata)
@@ -125,29 +125,28 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     ax.legend(loc="lower left")
 
   else:
-    # --- pull real signal ---
+    # pull real 
     data = np.asarray(data[1]).ravel()
 
-    # --- choose N_eff safely ---
     N_eff = min(int(N), data.size)
     data = data[:N_eff]
 
-    # --- DC offset + Hann window (match your f_obs code) ---
+    # DC offset + Hann window
     data0 = data - np.mean(data)
     w = np.hanning(N_eff)
     dataw = data0 * w
 
-    # --- FFT + power ---
+    # FFT + power
     ts = 1.0 / sample_freq
     freq = np.fft.fftshift(np.fft.fftfreq(N_eff, d=ts))
     datafft = np.fft.fftshift(np.fft.fft(dataw, n=N_eff))
     pow = np.abs(datafft) ** 2
 
-    # --- peak in [0, fs/2], but if it's 0 use next highest ---
+    # peak in [0, fs/2]
     mask = (freq >= 0) & (freq <= sample_freq/2)
     fpk_hz = _peak_from_spectrum(freq[mask], pow[mask])
 
-    # --- plot ---
+    # plot
     ax.plot(freq / 1e6, pow, c=color)
     ax.scatter(freq / 1e6, pow, s=5, c=color2)
     ax.axvline(x=-sample_freq / 2e6, c="black", ls="--",alpha=0.6)
@@ -156,7 +155,7 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     ax.set_yscale("log")
     ax.set_ylim(bottom=1e-5)
 
-    # --- label the peak frequency ---
+    # label the peak frequency
     if label:
       ax.text(0.98, 0.95, f"Peak: {fpk_hz/1e6:.3f} MHz",
               transform=ax.transAxes, ha="right", va="top")
@@ -251,7 +250,7 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
     return float(fpos[k1])
 
 
-  # ---- scan directory ----
+  
   pts = []
   for fn in os.listdir(data_dir):
     if not (fn.startswith("digital_sin_") and fn.lower().endswith(".npz")):
@@ -264,7 +263,7 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
     fp = os.path.join(data_dir, fn)
     arr = _load_arr0(fp)
 
-    # lab1 real-data convention: signal in arr[1] if 2D :contentReference[oaicite:0]{index=0}
+  
     x = arr[1] if (hasattr(arr, "ndim") and arr.ndim >= 2) else arr
 
     fpk = _peak_freq_hz(x, fs_hz, N)
@@ -277,7 +276,7 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
   fs_meas_hz = pts[:, 0]
   fobs_meas_hz = pts[:, 1]
 
-  # ---- theory via mod formula ----
+  # mod formula
   f0_hz = float(signal_freq) * 1e6
   fs_min = 5e5
   fs_max = 5e6
@@ -285,7 +284,7 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
 
   fobs_theory_hz = np.abs(((f0_hz + fs_theory_hz/2) % fs_theory_hz) - fs_theory_hz/2)
 
-  # ---- plot in MHz ----
+  # plot
   fs_theory_mhz = fs_theory_hz / 1e6
   fobs_theory_mhz = fobs_theory_hz / 1e6
   fs_meas_mhz = fs_meas_hz / 1e6
