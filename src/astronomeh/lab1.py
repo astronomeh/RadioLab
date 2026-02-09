@@ -105,9 +105,9 @@ def plot_pow(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbda
     lsbpow = np.abs(lsbfft)**2
 
     plt.plot(usbx/1e6, usbpow,c="cornflowerblue",alpha=0.7)
-    plt.scatter(usbx/1e6, usbpow,c="cornflowerblue")
+    plt.scatter(usbx/1e6, usbpow,c="cornflowerblue", s=5)
     plt.plot(lsbx/1e6, lsbpow,c="red", alpha=0.7)
-    plt.scatter(lsbx/1e6, lsbpow,c="red")
+    plt.scatter(lsbx/1e6, lsbpow,c="red",s=5)
     plt.axvline(x=-sample_freq/2e6,c="black",ls="--")
     plt.axvline(x=sample_freq/2e6,c="black",ls="--")
     plt.axvline(x=0,c="black")
@@ -127,4 +127,5 @@ def plot_pow(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbda
     plt.title(f"Power Spectrum of Mixed {signal_freq} Mhz LO and {lsb_freq}/{usb_freq} Mhz RF Signals")
   plt.xlabel("Frequency (MHz)")
   plt.ylabel("log Power (Arbitrary Units)")
+  plt.grid()
   plt.show()
