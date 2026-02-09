@@ -102,7 +102,7 @@ def plot_pow(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbda
     usbmask = usbx>=0
     lsbmask = lsbx>=0
     usbpow = np.abs(usbfft)**2
-    lsbpow = np.abs(lsffft)**2
+    lsbpow = np.abs(lsbfft)**2
 
     plt.plot(usbx, usbpow,c="cornflowerblue",alpha=0.7)
     plt.scatter(usbx, usbpow,c="cornflowerblue")
