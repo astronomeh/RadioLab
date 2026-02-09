@@ -85,7 +85,7 @@ def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None
       usbz = usbin_phase+1j*usbquad
       lsbz = lsbin_phase+1j*lsbquad
       
-    else:
+    elif usbdata.size == 2:
       usbz = usbdata[1,:]
       lsbz = lsbdata[1,:]
       
