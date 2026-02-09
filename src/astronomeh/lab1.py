@@ -112,7 +112,7 @@ def plot_pow(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbda
     plt.axvline(x=sample_freq/2e6,c="black",ls="--")
     plt.axvline(x=0,c="black")
     plt.yscale("log")
-    plt.legend(lec="upper right")
+    plt.legend(loc="upper right")
     
     
   else:
