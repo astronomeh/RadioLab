@@ -2,15 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
 # Package Installation Test
 def test():
   print("Hello Professor!")
 
 
-
 # Create time plot
-def plot_time(signal_freq,sample_freq,split,N=4096,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
+def plot_time(signal_freq,sample_freq=3e6,split,N=4096,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
   if ax is None:
     fig, ax = plt.subplots()
   # Length of observation
@@ -43,9 +41,6 @@ def plot_time(signal_freq,sample_freq,split,N=4096,data=None,usbdata=None,lsbdat
     # Plot
     ax.plot(x,data,c="black")
     ax.scatter(x,data,c="red",s=5)
-
-  
-
   
   # Set Title
   if signal_freq2 == None and usb_freq == None:
@@ -57,8 +52,6 @@ def plot_time(signal_freq,sample_freq,split,N=4096,data=None,usbdata=None,lsbdat
   ax.grid(True)
   ax.set_xlabel("Time (1e-6 s)")
   ax.set_ylabel("Amplitude (Arbitrary Voltage Units)")
-
-
 
 # Create Voltage Spectrum
 def plot_volt(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
@@ -74,7 +67,7 @@ def plot_volt(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=Non
 
 
 # Create Power Spectrum
-def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
+def plot_pow(signal_freq,sample_freq=3e6,split,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
   if usb_freq != None:
     if usbdata.size == 3:
       usbin_phase = usbdata[1,:,0]
@@ -89,32 +82,32 @@ def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None
       usbz = usbdata[1,:]
       lsbz = lsbdata[1,:]
       
-      usbfft = np.fft.fft(usbz)
-      lsbfft = np.fft.fft(lsbz)
-      ts = 1/sample_freq
-      usbfreq = np.fft.fftfreq(N,d=ts)
-      usbfreq = np.fft.fftshift(usbfreq)
-      usbfft = np.fft.fftshift(usbfft)
-      lsbfreq = np.fft.fftfreq(N,d=ts)
-      lsbfreq = np.fft.fftshift(lsbfreq)
-      lsbfft = np.fft.fftshift(lsbfft)
+    usbfft = np.fft.fft(usbz)
+    lsbfft = np.fft.fft(lsbz)
+    ts = 1/sample_freq
+    usbfreq = np.fft.fftfreq(N,d=ts)
+    usbfreq = np.fft.fftshift(usbfreq)
+    usbfft = np.fft.fftshift(usbfft)
+    lsbfreq = np.fft.fftfreq(N,d=ts)
+    lsbfreq = np.fft.fftshift(lsbfreq)
+    lsbfft = np.fft.fftshift(lsbfft)
   
-      usbx = usbfreq
-      lsbx = lsbfreq
-      print(usbx.shape)
+    usbx = usbfreq
+    lsbx = lsbfreq
+    print(usbx.shape)
       
-      usbpow = np.abs(usbfft)**2
-      lsbpow = np.abs(lsbfft)**2
-      print(lsbpow.shape)
-      ax.plot(usbx/1e6, usbpow,c="cornflowerblue",label=f"USB {usb_freq}MHz")
-      ax.scatter(usbx/1e6, usbpow,c="cornflowerblue", s=5)
-      ax.plot(lsbx/1e6, lsbpow,c="red", alpha=0.3,label=f"LSB {lsb_freq}MHz")
-      ax.scatter(lsbx/1e6, lsbpow,c="red",s=5)
-      ax.axvline(x=-sample_freq/2e6,c="black",ls="--")
-      ax.axvline(x=sample_freq/2e6,c="black",ls="--")
-      ax.axvline(x=0,c="black")
-      ax.set_yscale("log")
-      ax.legend(loc="lower left")
+    usbpow = np.abs(usbfft)**2
+    lsbpow = np.abs(lsbfft)**2
+    print(lsbpow.shape)
+    ax.plot(usbx/1e6, usbpow,c="cornflowerblue",label=f"USB {usb_freq}MHz")
+    ax.scatter(usbx/1e6, usbpow,c="cornflowerblue", s=5)
+    ax.plot(lsbx/1e6, lsbpow,c="red", alpha=0.3,label=f"LSB {lsb_freq}MHz")
+    ax.scatter(lsbx/1e6, lsbpow,c="red",s=5)
+    ax.axvline(x=-sample_freq/2e6,c="black",ls="--")
+    ax.axvline(x=sample_freq/2e6,c="black",ls="--")
+    ax.axvline(x=0,c="black")
+    ax.set_yscale("log")
+    ax.legend(loc="lower left")
     
     
   else:
