@@ -76,8 +76,8 @@ def plot_volt(data,signal_freq,signal_freq2,sample_freq,split,direct):
 
 
 # Create Power Spectrum
-def plot_pow(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None):
-  if not direct:
+def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None):
+  if usb_freq != None:
     usbin_phase = usbdata[1,:,0]
     usbquad = usbdata[1,:,1]
     lsbin_phase = lsbdata[1,:,0]
