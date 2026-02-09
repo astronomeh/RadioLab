@@ -33,7 +33,7 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
     plt.scatter(x,usbquad,c="cornflowerblue",s=5)
     plt.plot(x,lsbquad,c="red",label="LSB Quadrature")
     plt.scatter(x,lsbquad,c="red",s=5)
-    plt.xlim(0,1e-5)
+    plt.xlim(0,5e-6)
     plt.legend(loc="upper right")
     
   # For Real Data
@@ -56,7 +56,7 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
   else:
     plt.title(f"Mixed {signal_freq} Mhz LO and {usb_freq}/{lsbfreq} Mhz RF Signals sampled at {sample_freq/1e6} Mhz")
   plt.grid()
-  plt.xlabel("Time (5e-6 s)")
+  plt.xlabel("Time (1e-6 s)")
   plt.ylabel("Amplitude (Arbitrary Voltage Units)")
   plt.show()
 
