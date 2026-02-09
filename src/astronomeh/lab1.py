@@ -79,7 +79,7 @@ def plot_volt(signal_freq,sample_freq,split=False,N=4096,data=None,usbdata=None,
 
 
 # Create Power Spectrum
-def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdata=None, lsbdata=None, signal_freq2=None,usb_freq=None, lsb_freq=None, ax=None, show=False):
+def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdata=None, lsbdata=None, signal_freq2=None,usb_freq=None, lsb_freq=None, ax=None, show=False,color=None,color2=None,label=False):
 
   if ax is None:
     fig, ax = plt.subplots()
@@ -148,17 +148,18 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     fpk_hz = _peak_from_spectrum(freq[mask], pow[mask])
 
     # --- plot ---
-    ax.plot(freq / 1e6, pow, c="red")
-    ax.scatter(freq / 1e6, pow, s=5, c="cornflowerblue")
-    ax.axvline(x=-sample_freq / 2e6, c="black", ls="--")
-    ax.axvline(x= sample_freq / 2e6, c="black", ls="--")
-    ax.axvline(x=0, c="black")
+    ax.plot(freq / 1e6, pow, c=color)
+    ax.scatter(freq / 1e6, pow, s=5, c=color2)
+    ax.axvline(x=-sample_freq / 2e6, c="black", ls="--",alpha=0.6)
+    ax.axvline(x= sample_freq / 2e6, c="black", ls="--",alpha=0.6)
+    ax.axvline(x=0, c="black",alpha=0.6)
     ax.set_yscale("log")
     ax.set_ylim(bottom=1e-5)
 
     # --- label the peak frequency ---
-    ax.text(0.98, 0.95, f"Peak: {fpk_hz/1e6:.3f} MHz",
-            transform=ax.transAxes, ha="right", va="top")
+    if label:
+      ax.text(0.98, 0.95, f"Peak: {fpk_hz/1e6:.3f} MHz",
+              transform=ax.transAxes, ha="right", va="top")
 
     # Titles
   if signal_freq2 is None and usb_freq is None:
