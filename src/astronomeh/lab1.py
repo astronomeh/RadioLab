@@ -168,11 +168,11 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
 
   data_dir = data
 
-  def _parse_fs_from_name(fn):
-    m = re.search(r"digital_sin_([0-9]+(?:\.[0-9]+)?)", fn)
+def _parse_fs_from_name(fn):
+	m = re.search(r"digital_sin_([0-9]+(?:\.[0-9]+)?)", fn)
     return float(m.group(1)) if m else None
 
-  def _load_arr0(fp):
+def _load_arr0(fp):
     if fp.lower().endswith(".npz"):
       with np.load(fp, allow_pickle=True) as z:
         arr = z["arr_0"]
@@ -183,7 +183,7 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
       arr = np.asarray(arr.tolist(), dtype=float)
     return arr
 
-  def _peak_freq_hz(x, fs_hz, N_use):
+def _peak_freq_hz(x, fs_hz, N_use):
     x = np.asarray(x).ravel()
     N_eff = min(int(N_use), x.size)
     x = x[:N_eff]
@@ -209,7 +209,7 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
     k1 = int(np.argmax(Ppos))
 
     # if peak is at 0 Hz, use next-highest
-    if fpos[k1] == 0.0:
+	if fpos[k1] == 0.0:
       order = np.argsort(Ppos)[::-1]  # descending power
       for k in order:
         if fpos[k] != 0.0:
