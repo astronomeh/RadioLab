@@ -177,17 +177,7 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
                     data=None, usbdata=None, lsbdata=None,
                     signal_freq2=None, usb_freq=None, lsb_freq=None,
                     ax=None, show=False):
-  """
-  f_obs vs f_s (aliasing) plot.
-
-  Pass directory path as `data=...` containing digital_sin_*.npz.
-  Each npz is loaded as np.load(fp)["arr_0"].
-
-  Conventions:
-    - signal_freq in MHz
-    - sample_freq in Hz
-    - plot axes in MHz
-  """
+  
   if ax is None:
     fig, ax = plt.subplots()
 
@@ -241,11 +231,11 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
 
     # if peak is at 0 Hz, use next-highest
     if fpos[k1] == 0.0:
-      order = np.argsort(Ppos)[::-1]  # descending power
+      order = np.argsort(Ppos)[::-1]  # descending
       for k in order:
         if fpos[k] != 0.0:
           return float(fpos[k])
-      return 0.0  # fallback
+      return 0.0
 
     return float(fpos[k1])
 
