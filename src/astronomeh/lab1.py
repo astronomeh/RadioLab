@@ -299,6 +299,7 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
 
   ax.set_xscale("log")
   ax.set_xlim(fs_min/1e6, fs_max/1e6)
+  ax.set_ylim(0,1.5)
   ax.set_xlabel("Sampling frequency $f_s$ (MHz)")
   ax.set_ylabel("Observed frequency $f_{obs}$ (MHz)")
   ax.set_title(r"$f_{obs}$ vs $f_s$ (Aliasing)")
