@@ -78,14 +78,19 @@ def plot_volt(data,signal_freq,signal_freq2,sample_freq,split,direct):
 # Create Power Spectrum
 def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None):
   if usb_freq != None:
-    usbin_phase = usbdata[1,:,0]
-    usbquad = usbdata[1,:,1]
-    lsbin_phase = lsbdata[1,:,0]
-    lsbquad = lsbdata[1,:,1]
-
-    usbz = usbin_phase+1j*usbquad
-    lsbz = lsbin_phase+1j*lsbquad
-
+    if usbdata.size == 3:
+      usbin_phase = usbdata[1,:,0]
+      usbquad = usbdata[1,:,1]
+      lsbin_phase = lsbdata[1,:,0]
+      lsbquad = lsbdata[1,:,1]
+  
+      usbz = usbin_phase+1j*usbquad
+      lsbz = lsbin_phase+1j*lsbquad
+      
+    elif usbdata.size == 2:
+      usbz = usbdata
+      lsbz = lsbdata
+      
     usbfft = np.fft.fft(usbz)
     lsbfft = np.fft.fft(lsbz)
     ts = 1/sample_freq
