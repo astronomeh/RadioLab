@@ -54,7 +54,7 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
   elif split:
     plt.title(f"Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
   else:
-    plt.title(f"Mixed {signal_freq} Mhz LO and {usb_freq}/{lsbfreq} Mhz RF Signals sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Mixed {signal_freq} Mhz LO and {usb_freq}/{lsb_freq} Mhz RF Signals sampled at {sample_freq/1e6} Mhz")
   plt.grid()
   plt.xlabel("Time (1e-6 s)")
   plt.ylabel("Amplitude (Arbitrary Voltage Units)")
