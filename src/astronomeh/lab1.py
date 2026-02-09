@@ -114,22 +114,41 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     ax.legend(loc="lower left")
 
   else:
-    data = data[1]
+    # --- pull real signal ---
+    data = np.asarray(data[1]).ravel()
+
+    # --- choose N_eff safely ---
+    N_eff = min(int(N), data.size)
+    data = data[:N_eff]
+
+    # --- DC offset + Hann window (match your f_obs code) ---
+    data0 = data - np.mean(data)
+    w = np.hanning(N_eff)
+    dataw = data0 * w
+
+    # --- FFT + power ---
     ts = 1.0 / sample_freq
-    freq = np.fft.fftshift(np.fft.fftfreq(N, d=ts))
-    datafft = np.fft.fftshift(np.fft.fft(data, n=N))
-    pow = np.abs(datafft)**2
+    freq = np.fft.fftshift(np.fft.fftfreq(N_eff, d=ts))
+    datafft = np.fft.fftshift(np.fft.fft(dataw, n=N_eff))
+    pow = np.abs(datafft) ** 2
+
+    # --- peak in [0, fs/2], but if it's 0 use next highest ---
     mask = (freq >= 0) & (freq <= sample_freq/2)
     fpk_hz = _peak_from_spectrum(freq[mask], pow[mask])
-    ax.plot(freq / 1e6, pow,c="red")
-    ax.scatter(freq / 1e6, pow, s=5,c="cornflowerblue")
+
+    # --- plot ---
+    ax.plot(freq / 1e6, pow, c="red")
+    ax.scatter(freq / 1e6, pow, s=5, c="cornflowerblue")
     ax.axvline(x=-sample_freq / 2e6, c="black", ls="--")
     ax.axvline(x= sample_freq / 2e6, c="black", ls="--")
     ax.axvline(x=0, c="black")
     ax.set_yscale("log")
     ax.set_ylim(bottom=1e-5)
+
+    # --- label the peak frequency ---
     ax.text(0.98, 0.95, f"Peak: {fpk_hz/1e6:.3f} MHz",
-        transform=ax.transAxes, ha="right", va="top")
+            transform=ax.transAxes, ha="right", va="top")
+
     # Titles
   if signal_freq2 is None and usb_freq is None:
     ax.set_title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
