@@ -19,7 +19,7 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
   x = np.linspace(0,T,N)
   
   # For Complex Data
-  if not direct:
+  if usb_freq != None:
     # Separate Complex Components
     usbin_phase = usbdata[1,:,0]
     usbquad = usbdata[1,:,1]
