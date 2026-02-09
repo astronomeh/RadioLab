@@ -61,7 +61,7 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
 
 
 # Create Voltage Spectrum
-def plot_volt(data,signal_freq,signal_freq2,sample_freq,split,direct):
+def plot_volt(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
 
   # Set Title
   if signal_freq2 == None and usb_freq == None:
@@ -74,7 +74,7 @@ def plot_volt(data,signal_freq,signal_freq2,sample_freq,split,direct):
 
 
 # Create Power Spectrum
-def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None):
+def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
   if usb_freq != None:
     if usbdata.size == 3:
       usbin_phase = usbdata[1,:,0]
@@ -123,12 +123,11 @@ def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None
     
   # Set Title
   if signal_freq2 == None and usb_freq == None:
-    plt.title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
+    ax.title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
   elif split:
-    plt.title(f"Power Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
+    ax.title(f"Power Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
   else:
-    plt.title(f"Power Spectrum of Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals Sampled at {sample_freq/1e6}MHz")
-  plt.xlabel("Frequency (MHz)")
-  plt.ylabel("log Power (Arbitrary Units)")
-  plt.grid()
-  plt.show()
+    ax.title(f"Power Spectrum of Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals Sampled at {sample_freq/1e6}MHz")
+  ax.set_xlabel("Frequency (MHz)")
+  ax.set_ylabel("log Power (Arbitrary Units)")
+  ax.grid(True)
