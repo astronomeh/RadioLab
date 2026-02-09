@@ -27,8 +27,8 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
     lsbquad = lsbdata[1,:,1]
     # Plot
     plt.figure()
-    plt.plot(x,usbin_phase,c="black",label="In-Phase",ls="--")
-    plt.scatter(x,usbin_phase,c="black",s=5)
+    plt.plot(x,lsbin_phase,c="black",label="In-Phase",ls="--")
+    plt.scatter(x,lsbin_phase,c="black",s=5)
     plt.plot(x,usbquad,c="cornflowerblue",label="USB Quadrature")
     plt.scatter(x,usbquad,c="cornflowerblue",s=5)
     plt.plot(x,lsbquad,c="red",label="LSB Quadrature")
@@ -56,7 +56,7 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
   else:
     plt.title(f"Mixed {signal_freq} Mhz LO and {usb_freq}/{lsbfreq} Mhz RF Signals sampled at {sample_freq/1e6} Mhz")
   plt.grid()
-  plt.xlabel("Time (1e-5 s)")
+  plt.xlabel("Time (5e-6 s)")
   plt.ylabel("Amplitude (Arbitrary Voltage Units)")
   plt.show()
 
