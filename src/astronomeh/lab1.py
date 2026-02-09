@@ -138,9 +138,9 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
   else:
     ax.set_title(f"Power Spectrum of Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals Sampled at {sample_freq/1e6}MHz")
 
-	ax.set_xlabel("Frequency (MHz)")
-	ax.set_ylabel("log Power (Arbitrary Units)")
-	ax.grid(True)
+  ax.set_xlabel("Frequency (MHz)")
+  ax.set_ylabel("log Power (Arbitrary Units)")
+  ax.grid(True)
 
 
 def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
@@ -302,3 +302,4 @@ def _peak_from_spectrum(freq, P):
         return float(fpos[k])
     return 0.0
   return float(fpos[k1])
+
