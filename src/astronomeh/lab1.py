@@ -5,13 +5,13 @@ import os, re, io, zipfile
 
 # Package Installation Test
 def test():
-	print("Hello Professor!")
+  print("Hello Professor!")
 
 
 # Create time plot
 def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
-	if ax is None:
-		fig, ax = plt.subplots()
+  if ax is None:
+    fig, ax = plt.subplots()
   # Length of observation
   T = N/sample_freq
   
@@ -21,7 +21,7 @@ def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=N
   # For Complex Data
   if usb_freq is not None:
     # Separate Complex Components
-		usbin_phase = usbdata[1,:,0]
+    usbin_phase = usbdata[1,:,0]
     usbquad = usbdata[1,:,1]
     lsbin_phase = lsbdata[1,:,0]
     lsbquad = lsbdata[1,:,1]
@@ -36,9 +36,9 @@ def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=N
     ax.legend(loc="upper right")
     
   # For Real Data
-	else:
+  else:
     data=data[1]
-        # Plot
+    # Plot
     ax.plot(x,data,c="black")
     ax.set_xlim(0,1e-5)
     ax.scatter(x,data,c="red",s=5)
@@ -50,7 +50,7 @@ def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=N
     ax.set_title(f"Combined {signal_freq}MHz and {signal_freq2}Mhz Signal sampled at {sample_freq/1e6}Mhz")
   else:
     ax.set_title(f"Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals sampled at {sample_freq/1e6}Mhz")
-	ax.grid(True)
+  ax.grid(True)
   ax.set_xlabel("Time (1e-6 s)")
   ax.set_ylabel("Amplitude (Arbitrary Voltage Units)")
 
@@ -58,7 +58,7 @@ def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=N
 def plot_volt(signal_freq,sample_freq,split=False,N=4096,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
 
   # Set Title
-	if signal_freq2 == None and usb_freq == None:
+  if signal_freq2 == None and usb_freq == None:
     ax.set_title(f"Voltage Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}Mhz")
   elif split:
     ax.set_title(f"Voltage Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
@@ -69,75 +69,78 @@ def plot_volt(signal_freq,sample_freq,split=False,N=4096,data=None,usbdata=None,
 
 # Create Power Spectrum
 def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdata=None, lsbdata=None, signal_freq2=None,usb_freq=None, lsb_freq=None, ax=None, show=False):
-	if ax is None:
+
+  if ax is None:
     fig, ax = plt.subplots()
 
   if usb_freq is not None:
     usbdata_arr = np.asarray(usbdata)
     lsbdata_arr = np.asarray(lsbdata)
 
-  	if usbdata_arr.ndim == 3 and usbdata_arr.shape[-1] >= 2:
-   		usbin_phase = np.asarray(usbdata_arr[1, :, 0]).ravel()
-   		usbquad = np.asarray(usbdata_arr[1, :, 1]).ravel()
-  		lsbin_phase = np.asarray(lsbdata_arr[1, :, 0]).ravel()
-   		lsbquad = np.asarray(lsbdata_arr[1, :, 1]).ravel()
-   		usbz = usbin_phase + 1j * usbquad
-   		lsbz = lsbin_phase + 1j * lsbquad
-  	else:
-  		usbz = np.asarray(usbdata_arr[1, :]).ravel()
-  		lsbz = np.asarray(lsbdata_arr[1, :]).ravel()
+    if usbdata_arr.ndim == 3 and usbdata_arr.shape[-1] >= 2:
+      usbin_phase = np.asarray(usbdata_arr[1, :, 0]).ravel()
+      usbquad = np.asarray(usbdata_arr[1, :, 1]).ravel()
+      lsbin_phase = np.asarray(lsbdata_arr[1, :, 0]).ravel()
+      lsbquad = np.asarray(lsbdata_arr[1, :, 1]).ravel()
+      usbz = usbin_phase + 1j * usbquad
+      lsbz = lsbin_phase + 1j * lsbquad
+    else:
+      usbz = np.asarray(usbdata_arr[1, :]).ravel()
+      lsbz = np.asarray(lsbdata_arr[1, :]).ravel()
 
-  	N_eff = min(int(N), usbz.size, lsbz.size)
-  	usbz = usbz[:N_eff]
-  	lsbz = lsbz[:N_eff]
+    N_eff = min(int(N), usbz.size, lsbz.size)
+    usbz = usbz[:N_eff]
+    lsbz = lsbz[:N_eff]
 
-	else:
-        # --- pull real signal ---
-  	data = np.asarray(data[1]).ravel()
-
-    # --- choose N_eff safely ---
-    N_eff = min(int(N), data.size)
-    data = data[:N_eff]
-
-    # --- DC offset + Hann window (match your f_obs code) ---
-    data0 = data - np.mean(data)
-    w = np.hanning(N_eff)
-    dataw = data0 * w
-
-    # --- FFT + power ---
     ts = 1.0 / sample_freq
     freq = np.fft.fftshift(np.fft.fftfreq(N_eff, d=ts))
-    datafft = np.fft.fftshift(np.fft.fft(dataw, n=N_eff))
-    pow = np.abs(datafft) ** 2
 
-    # --- peak in [0, fs/2], but if it's 0 use next highest ---
+    usbfft = np.fft.fftshift(np.fft.fft(usbz, n=N_eff))
+    lsbfft = np.fft.fftshift(np.fft.fft(lsbz, n=N_eff))
+
+    usbpow = np.abs(usbfft) ** 2
+    lsbpow = np.abs(lsbfft) ** 2
+
+    ax.plot(freq / 1e6, usbpow, label=f"USB {usb_freq}MHz",c="cornflowerblue")
+    ax.scatter(freq / 1e6, usbpow, s=5,c="cornflowerblue")
+    ax.plot(freq / 1e6, lsbpow, alpha=0.3, label=f"LSB {lsb_freq}MHz",c="red")
+    ax.scatter(freq / 1e6, lsbpow, s=5,c="red")
+    ax.set_xlabel("Frequency (MHz)")
+    ax.set_ylabel("Power (Arbitrary Units)")
+    ax.axvline(x=-sample_freq / 2e6, c="black", ls="--")
+    ax.axvline(x= sample_freq / 2e6, c="black", ls="--")
+    ax.axvline(x=0, c="black")
+    ax.set_yscale("log")
+    ax.legend(loc="lower left")
+
+  else:
+    data = data[1]
+    ts = 1.0 / sample_freq
+    freq = np.fft.fftshift(np.fft.fftfreq(N, d=ts))
+    datafft = np.fft.fftshift(np.fft.fft(data, n=N))
+    pow = np.abs(datafft)**2
     mask = (freq >= 0) & (freq <= sample_freq/2)
     fpk_hz = _peak_from_spectrum(freq[mask], pow[mask])
-
-    # --- plot ---
-    ax.plot(freq / 1e6, pow, c="red")
-    ax.scatter(freq / 1e6, pow, s=5, c="cornflowerblue")
+    ax.plot(freq / 1e6, pow,c="red")
+    ax.scatter(freq / 1e6, pow, s=5,c="cornflowerblue")
     ax.axvline(x=-sample_freq / 2e6, c="black", ls="--")
     ax.axvline(x= sample_freq / 2e6, c="black", ls="--")
     ax.axvline(x=0, c="black")
     ax.set_yscale("log")
     ax.set_ylim(bottom=1e-5)
-    # --- label the peak frequency ---
-    ax.text(0.98, 0.95, f"Peak: {fpk_hz/1e6:.3f} MHz",transform=ax.transAxes, ha="right", va="top")
-
-    ax.legend(loc="lower left")
-
+    ax.text(0.98, 0.95, f"Peak: {fpk_hz/1e6:.3f} MHz",
+        transform=ax.transAxes, ha="right", va="top")
     # Titles
-	if signal_freq2 is None and usb_freq is None:
+  if signal_freq2 is None and usb_freq is None:
     ax.set_title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
   elif split:
     ax.set_title(f"Power Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
   else:
     ax.set_title(f"Power Spectrum of Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals Sampled at {sample_freq/1e6}MHz")
 
-  ax.set_xlabel("Frequency (MHz)")
-  ax.set_ylabel("log Power (Arbitrary Units)")
-  ax.grid(True)
+	ax.set_xlabel("Frequency (MHz)")
+	ax.set_ylabel("log Power (Arbitrary Units)")
+	ax.grid(True)
 
 
 def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
@@ -166,11 +169,11 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
 
   data_dir = data
 
-def _parse_fs_from_name(fn):
-	m = re.search(r"digital_sin_([0-9]+(?:\.[0-9]+)?)", fn)
+  def _parse_fs_from_name(fn):
+    m = re.search(r"digital_sin_([0-9]+(?:\.[0-9]+)?)", fn)
     return float(m.group(1)) if m else None
 
-def _load_arr0(fp):
+  def _load_arr0(fp):
     if fp.lower().endswith(".npz"):
       with np.load(fp, allow_pickle=True) as z:
         arr = z["arr_0"]
@@ -181,7 +184,7 @@ def _load_arr0(fp):
       arr = np.asarray(arr.tolist(), dtype=float)
     return arr
 
-def _peak_freq_hz(x, fs_hz, N_use):
+  def _peak_freq_hz(x, fs_hz, N_use):
     x = np.asarray(x).ravel()
     N_eff = min(int(N_use), x.size)
     x = x[:N_eff]
@@ -207,7 +210,7 @@ def _peak_freq_hz(x, fs_hz, N_use):
     k1 = int(np.argmax(Ppos))
 
     # if peak is at 0 Hz, use next-highest
-	if fpos[k1] == 0.0:
+    if fpos[k1] == 0.0:
       order = np.argsort(Ppos)[::-1]  # descending power
       for k in order:
         if fpos[k] != 0.0:
@@ -299,5 +302,3 @@ def _peak_from_spectrum(freq, P):
         return float(fpos[k])
     return 0.0
   return float(fpos[k1])
-
-
