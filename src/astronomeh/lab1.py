@@ -104,9 +104,9 @@ def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None
     usbpow = np.abs(usbfft)**2
     lsbpow = np.abs(lsbfft)**2
 
-    plt.plot(usbx/1e6, usbpow,c="cornflowerblue",alpha=0.5,label=f"USB {usb_freq}MHz")
+    plt.plot(usbx/1e6, usbpow,c="cornflowerblue",label=f"USB {usb_freq}MHz")
     plt.scatter(usbx/1e6, usbpow,c="cornflowerblue", s=5)
-    plt.plot(lsbx/1e6, lsbpow,c="red", alpha=0.5,label=f"LSB {lsb_freq}MHz")
+    plt.plot(lsbx/1e6, lsbpow,c="red", alpha=0.3,label=f"LSB {lsb_freq}MHz")
     plt.scatter(lsbx/1e6, lsbpow,c="red",s=5)
     plt.axvline(x=-sample_freq/2e6,c="black",ls="--")
     plt.axvline(x=sample_freq/2e6,c="black",ls="--")
