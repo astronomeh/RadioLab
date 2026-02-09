@@ -40,7 +40,7 @@ def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=N
     data=data[1]
     # Plot
     ax.plot(x,data,c="black")
-    ax.set_xlim(0,5e-6)
+    ax.set_xlim(0,2e-5)
     ax.scatter(x,data,c="red",s=5)
   
   # Set Title
@@ -124,6 +124,8 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     ax.axvline(x= sample_freq / 2e6, c="black", ls="--")
     ax.axvline(x=0, c="black")
     ax.set_yscale("log")
+    ax.set_ylim(bottom=1e-5)
+    ax.set_xlim(-0.1 * sample_freq, 1.1 * sample_freq)
     # Titles
   if signal_freq2 is None and usb_freq is None:
     ax.set_title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
