@@ -89,31 +89,31 @@ def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None
       usbz = usbdata[1,:]
       lsbz = lsbdata[1,:]
       
-    usbfft = np.fft.fft(usbz)
-    lsbfft = np.fft.fft(lsbz)
-    ts = 1/sample_freq
-    usbfreq = np.fft.fftfreq(N,d=ts)
-    usbfreq = np.fft.fftshift(usbfreq)
-    usbfft = np.fft.fftshift(usbfft)
-    lsbfreq = np.fft.fftfreq(N,d=ts)
-    lsbfreq = np.fft.fftshift(lsbfreq)
-    lsbfft = np.fft.fftshift(lsbfft)
-
-    usbx = usbfreq
-    lsbx = lsbfreq
-    
-    usbpow = np.abs(usbfft)**2
-    lsbpow = np.abs(lsbfft)**2
-    
-    ax.plot(usbx/1e6, usbpow,c="cornflowerblue",label=f"USB {usb_freq}MHz")
-    ax.scatter(usbx/1e6, usbpow,c="cornflowerblue", s=5)
-    ax.plot(lsbx/1e6, lsbpow,c="red", alpha=0.3,label=f"LSB {lsb_freq}MHz")
-    ax.scatter(lsbx/1e6, lsbpow,c="red",s=5)
-    ax.axvline(x=-sample_freq/2e6,c="black",ls="--")
-    ax.axvline(x=sample_freq/2e6,c="black",ls="--")
-    ax.axvline(x=0,c="black")
-    ax.set_yscale("log")
-    ax.legend(loc="lower left")
+      usbfft = np.fft.fft(usbz)
+      lsbfft = np.fft.fft(lsbz)
+      ts = 1/sample_freq
+      usbfreq = np.fft.fftfreq(N,d=ts)
+      usbfreq = np.fft.fftshift(usbfreq)
+      usbfft = np.fft.fftshift(usbfft)
+      lsbfreq = np.fft.fftfreq(N,d=ts)
+      lsbfreq = np.fft.fftshift(lsbfreq)
+      lsbfft = np.fft.fftshift(lsbfft)
+  
+      usbx = usbfreq
+      lsbx = lsbfreq
+      
+      usbpow = np.abs(usbfft)**2
+      lsbpow = np.abs(lsbfft)**2
+      
+      ax.plot(usbx/1e6, usbpow,c="cornflowerblue",label=f"USB {usb_freq}MHz")
+      ax.scatter(usbx/1e6, usbpow,c="cornflowerblue", s=5)
+      ax.plot(lsbx/1e6, lsbpow,c="red", alpha=0.3,label=f"LSB {lsb_freq}MHz")
+      ax.scatter(lsbx/1e6, lsbpow,c="red",s=5)
+      ax.axvline(x=-sample_freq/2e6,c="black",ls="--")
+      ax.axvline(x=sample_freq/2e6,c="black",ls="--")
+      ax.axvline(x=0,c="black")
+      ax.set_yscale("log")
+      ax.legend(loc="lower left")
     
     
   else:
