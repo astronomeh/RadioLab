@@ -66,7 +66,7 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
 def plot_volt(data,signal_freq,signal_freq2,sample_freq,split,direct):
 
   # Set Title
-  if signal_freq2 == Empty:
+  if signal_freq2 == None and usb_freq == None:
     plt.title(f"Voltage Spectrum of {signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
   elif split:
     plt.title(f"Voltage Spectrum of Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal")
@@ -115,7 +115,7 @@ def plot_pow(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbda
     data = data[1]
     
   # Set Title
-  if signal_freq2 == Empty and usb_freq == None:
+  if signal_freq2 == None and usb_freq == None:
     plt.title(f"Power Spectrum of {signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
   elif split:
     plt.title(f"Power Spectrum of Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal")
