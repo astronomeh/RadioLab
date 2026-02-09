@@ -41,7 +41,7 @@ def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=N
     # Plot
     ax.plot(x,data,c="black")
     ax.set_xlim(0,1e-5)
-    ax.scatter(x,data,c="red",s=5)
+    ax.scatter(x,data,c="red",s=10)
   
   # Set Title
   if signal_freq2 == None and usb_freq == None:
