@@ -118,6 +118,8 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     freq = np.fft.fftshift(np.fft.fftfreq(N, d=ts))
     datafft = np.fft.fftshift(np.fft.fft(data, n=N))
     pow = np.abs(datafft)**2
+    mask = (freq >= 0) & (freq <= sample_freq/2)
+    fpk_hz = _peak_from_spectrum(freq[mask], P[mask])
     ax.plot(freq / 1e6, pow,c="red")
     ax.scatter(freq / 1e6, pow, s=5,c="cornflowerblue")
     ax.axvline(x=-sample_freq / 2e6, c="black", ls="--")
@@ -125,6 +127,8 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     ax.axvline(x=0, c="black")
     ax.set_yscale("log")
     ax.set_ylim(bottom=1e-5)
+    ax.text(0.98, 0.95, f"Peak: {fpk_hz/1e6:.3f} MHz",
+        transform=ax.transAxes, ha="right", va="top")
     # Titles
   if signal_freq2 is None and usb_freq is None:
     ax.set_title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
@@ -277,4 +281,24 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
     plt.show()
 
   return fs_meas_hz, fobs_meas_hz
+                      
+def _peak_from_spectrum(freq, P):
+  """Return peak frequency in Hz. If peak is at 0, return next-highest."""
+  freq = np.asarray(freq)
+  P = np.asarray(P)
+
+  # only non-negative freqs
+  mask = freq >= 0
+  fpos = freq[mask]
+  Ppos = P[mask]
+
+  k1 = int(np.argmax(Ppos))
+  if fpos[k1] == 0.0:
+    order = np.argsort(Ppos)[::-1]
+    for k in order:
+      if fpos[k] != 0.0:
+        return float(fpos[k])
+    return 0.0
+  return float(fpos[k1])
+
 
