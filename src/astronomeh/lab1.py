@@ -105,7 +105,8 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     ax.scatter(freq / 1e6, usbpow, s=5,c="cornflowerblue")
     ax.plot(freq / 1e6, lsbpow, alpha=0.3, label=f"LSB {lsb_freq}MHz",c="red")
     ax.scatter(freq / 1e6, lsbpow, s=5,c="red")
-
+    ax.set_xlabel("Frequency (MHz)")
+    ax.set_ylabel("Power (Arbitrary Units)")
     ax.axvline(x=-sample_freq / 2e6, c="black", ls="--")
     ax.axvline(x= sample_freq / 2e6, c="black", ls="--")
     ax.axvline(x=0, c="black")
