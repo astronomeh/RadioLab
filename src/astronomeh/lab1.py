@@ -38,9 +38,9 @@ def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=N
   # For Real Data
   else:
     data=data[1]
-    
     # Plot
     ax.plot(x,data,c="black")
+    ax.set_xlim(0,5e-6)
     ax.scatter(x,data,c="red",s=5)
   
   # Set Title
@@ -114,7 +114,16 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
 
   else:
     data = data[1]
-
+    ts = 1.0 / sample_freq
+    freq = np.fft.fftshift(np.fft.fftfreq(N, d=ts))
+    datafft = np.fft.fftshift(np.fft.fft(data, n=N))
+    pow = np.abs(datafft)**2
+    ax.plot(freq / 1e6, usbpow, label=f"USB {usb_freq}MHz",c="cornflowerblue")
+    ax.scatter(freq / 1e6, usbpow, s=5,c="cornflowerblue")
+    ax.axvline(x=-sample_freq / 2e6, c="black", ls="--")
+    ax.axvline(x= sample_freq / 2e6, c="black", ls="--")
+    ax.axvline(x=0, c="black")
+    ax.set_yscale("log")
     # Titles
   if signal_freq2 is None and usb_freq is None:
     ax.set_title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
@@ -127,9 +136,6 @@ def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdat
     ax.set_ylabel("log Power (Arbitrary Units)")
     ax.grid(True)
 
-import os, re
-import numpy as np
-import matplotlib.pyplot as plt
 
 def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
                     data=None, usbdata=None, lsbdata=None,
@@ -259,6 +265,8 @@ def plot_fobs_vs_fs(signal_freq, sample_freq=3e6, split=False, N=4096,
              label=f"highlight fs={sample_freq/1e6:.2f} MHz")
 
   ax.set_xscale("log")
+  ax.set_xlim(0.5, 3.5)
+  ax.set_ylim(0, 1.5)
   ax.set_xlabel("Sampling frequency $f_s$ (MHz)")
   ax.set_ylabel("Observed frequency $f_{obs}$ (MHz)")
   ax.set_title(r"$f_{obs}$ vs $f_s$ (Aliasing)")
