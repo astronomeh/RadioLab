@@ -56,7 +56,14 @@ def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=N
 
 # Create Voltage Spectrum
 def plot_volt(signal_freq,sample_freq,split=False,N=4096,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
-
+  data = data[1]
+  data = np.fft.fft(data)
+  ts = 1.0 / sample_freq
+  freq = np.fft.fftshift(np.fft.fftfreq(N, d=ts))
+  datafft = np.fft.fftshift(np.fft.fft(data, n=N))
+  ax.plot(freq / 1e6, data, label=f"USB {usb_freq}MHz")
+  ax.set_xlabel("Frequency (MHz)")
+  ax.set_ylabel("Voltage (Arbitrary Units)")
   # Set Title
   if signal_freq2 == None and usb_freq == None:
     ax.set_title(f"Voltage Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}Mhz")
