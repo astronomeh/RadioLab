@@ -10,7 +10,7 @@ def test():
 
 
 # Create time plot
-def plot_time(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
+def plot_time(signal_freq,sample_freq,split,N=4096,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
   if ax is None:
     fig, ax = plt.subplots()
   # Length of observation
