@@ -29,9 +29,9 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
     plt.figure()
     plt.plot(x,lsbin_phase,c="black",label="In-Phase",ls="--")
     plt.scatter(x,lsbin_phase,c="black",s=5)
-    plt.plot(x,usbquad,c="cornflowerblue",label="USB Quadrature")
+    plt.plot(x,usbquad,c="cornflowerblue",label=f"USB Quadrature {usb_freq}MHz")
     plt.scatter(x,usbquad,c="cornflowerblue",s=5)
-    plt.plot(x,lsbquad,c="red",label="LSB Quadrature")
+    plt.plot(x,lsbquad,c="red",label=f"LSB Quadrature {lsb_freq}MHz")
     plt.scatter(x,lsbquad,c="red",s=5)
     plt.xlim(0,5e-6)
     plt.legend(loc="upper right")
@@ -50,11 +50,11 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
   
   # Set Title
   if signal_freq2 == None and usb_freq == None:
-    plt.title(f"{signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"{signal_freq} MHz Signal Sampled at {sample_freq/1e6} Mhz")
   elif split:
-    plt.title(f"Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Combined {signal_freq} MHz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
   else:
-    plt.title(f"Mixed {signal_freq} Mhz LO and {lsb_freq}/{usb_freq} Mhz RF Signals sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Mixed {signal_freq} MHz LO and {lsb_freq}/{usb_freq} Mhz RF Signals sampled at {sample_freq/1e6} Mhz")
   plt.grid()
   plt.xlabel("Time (1e-6 s)")
   plt.ylabel("Amplitude (Arbitrary Voltage Units)")
@@ -67,11 +67,11 @@ def plot_volt(data,signal_freq,signal_freq2,sample_freq,split,direct):
 
   # Set Title
   if signal_freq2 == None and usb_freq == None:
-    plt.title(f"Voltage Spectrum of {signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Voltage Spectrum of {signal_freq} MHz Signal Sampled at {sample_freq/1e6} Mhz")
   elif split:
-    plt.title(f"Voltage Spectrum of Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal")
+    plt.title(f"Voltage Spectrum of Combined {signal_freq} MHz and {signal_freq2} Mhz Signal")
   else:
-    plt.title(f"Voltage Spectrum of Mixed {signal_freq} Mhz LO and {signal_freq2} Mhz RF Signal")
+    plt.title(f"Voltage Spectrum of Mixed {signal_freq} MHz LO and {signal_freq2} Mhz RF Signal")
 
 
 
@@ -120,11 +120,11 @@ def plot_pow(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbda
     
   # Set Title
   if signal_freq2 == None and usb_freq == None:
-    plt.title(f"Power Spectrum of {signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
+    plt.title(f"Power Spectrum of {signal_freq} MHz Signal Sampled at {sample_freq/1e6} MHz")
   elif split:
-    plt.title(f"Power Spectrum of Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal")
+    plt.title(f"Power Spectrum of Combined {signal_freq} MHz and {signal_freq2} Mhz Signal")
   else:
-    plt.title(f"Power Spectrum of Mixed {signal_freq} Mhz LO and {lsb_freq}/{usb_freq} Mhz RF Signals")
+    plt.title(f"Power Spectrum of Mixed {signal_freq} MHz LO and {lsb_freq}/{usb_freq} Mhz RF Signals")
   plt.xlabel("Frequency (MHz)")
   plt.ylabel("log Power (Arbitrary Units)")
   plt.grid()
