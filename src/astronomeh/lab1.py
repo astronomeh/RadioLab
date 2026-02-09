@@ -54,7 +54,7 @@ def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=N
   ax.set_ylabel("Amplitude (Arbitrary Voltage Units)")
 
 # Create Voltage Spectrum
-def plot_volt(signal_freq,sample_freq,split=False,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
+def plot_volt(signal_freq,sample_freq,split=False,N=4096,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
 
   # Set Title
   if signal_freq2 == None and usb_freq == None:
@@ -67,7 +67,7 @@ def plot_volt(signal_freq,sample_freq,split=False,N,data=None,usbdata=None,lsbda
 
 
 # Create Power Spectrum
-def plot_pow(signal_freq,sample_freq=3e6,split=False,N,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
+def plot_pow(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
   if usb_freq != None:
     if usbdata.size == 3:
       usbin_phase = usbdata[1,:,0]
