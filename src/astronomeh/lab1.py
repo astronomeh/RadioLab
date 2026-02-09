@@ -71,7 +71,7 @@ def plot_volt(data,signal_freq,signal_freq2,sample_freq,split,direct):
   elif split:
     plt.title(f"Voltage Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
   else:
-    plt.title(f"Voltage Spectrum of Mixed {signal_freq}MHz LO and {signal_freq2}Mhz RF Signal")
+    plt.title(f"Voltage Spectrum of Mixed {signal_freq}MHz LO and {signal_freq2/1e6}Mhz RF Signal")
 
 
 
@@ -124,7 +124,7 @@ def plot_pow(signal_freq,sample_freq,split,N,data=None,usbdata=None,lsbdata=None
   elif split:
     plt.title(f"Power Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
   else:
-    plt.title(f"Power Spectrum of Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals Sampled at {sample_freq}MHz")
+    plt.title(f"Power Spectrum of Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals Sampled at {sample_freq/1e6}MHz")
   plt.xlabel("Frequency (MHz)")
   plt.ylabel("log Power (Arbitrary Units)")
   plt.grid()
