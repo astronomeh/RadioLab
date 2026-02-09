@@ -50,9 +50,9 @@ def plot_time(signal_freq,sample_freq=3e6,split=False,N=4096,data=None,usbdata=N
         ax.set_title(f"Combined {signal_freq}MHz and {signal_freq2}Mhz Signal sampled at {sample_freq/1e6}Mhz")
     else:
         ax.set_title(f"Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals sampled at {sample_freq/1e6}Mhz")
-      ax.grid(True)
-      ax.set_xlabel("Time (1e-6 s)")
-      ax.set_ylabel("Amplitude (Arbitrary Voltage Units)")
+      	ax.grid(True)
+      	ax.set_xlabel("Time (1e-6 s)")
+      	ax.set_ylabel("Amplitude (Arbitrary Voltage Units)")
 
 # Create Voltage Spectrum
 def plot_volt(signal_freq,sample_freq,split=False,N=4096,data=None,usbdata=None,lsbdata=None,signal_freq2=None,usb_freq=None,lsb_freq=None,ax=None,show=False):
