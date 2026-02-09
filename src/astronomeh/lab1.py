@@ -67,69 +67,60 @@ def plot_volt(signal_freq,sample_freq,split=False,N=4096,data=None,usbdata=None,
 
 
 # Create Power Spectrum
-def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,
-             data=None, usbdata=None, lsbdata=None, signal_freq2=None,
-             usb_freq=None, lsb_freq=None, ax=None, show=False):
+def plot_pow(signal_freq, sample_freq=3e6, split=False, N=4096,data=None, usbdata=None, lsbdata=None, signal_freq2=None,usb_freq=None, lsb_freq=None, ax=None, show=False):
 
-    if ax is None:
-        fig, ax = plt.subplots()
+  if ax is None:
+    fig, ax = plt.subplots()
 
-    if usb_freq is not None:
-        # --- Extract 1D signals (real or IQ) ---
-        usbdata_arr = np.asarray(usbdata)
-        lsbdata_arr = np.asarray(lsbdata)
+  if usb_freq is not None:
+    usbdata_arr = np.asarray(usbdata)
+    lsbdata_arr = np.asarray(lsbdata)
 
-        if usbdata_arr.ndim == 3 and usbdata_arr.shape[-1] >= 2:
-            # IQ data: shape like (records, samples, 2)
-            usbin_phase = np.asarray(usbdata_arr[1, :, 0]).ravel()
-            usbquad     = np.asarray(usbdata_arr[1, :, 1]).ravel()
-            lsbin_phase = np.asarray(lsbdata_arr[1, :, 0]).ravel()
-            lsbquad     = np.asarray(lsbdata_arr[1, :, 1]).ravel()
-            usbz = usbin_phase + 1j * usbquad
-            lsbz = lsbin_phase + 1j * lsbquad
-        else:
-            # Real (or already complex) data: shape like (records, samples)
-            usbz = np.asarray(usbdata_arr[1, :]).ravel()
-            lsbz = np.asarray(lsbdata_arr[1, :]).ravel()
-
-        # --- Choose an FFT length that matches the data ---
-        N_eff = min(int(N), usbz.size, lsbz.size)
-        usbz = usbz[:N_eff]
-        lsbz = lsbz[:N_eff]
-
-        # --- FFT and frequency axis (same N_eff everywhere) ---
-        ts = 1.0 / sample_freq
-        freq = np.fft.fftshift(np.fft.fftfreq(N_eff, d=ts))
-
-        usbfft = np.fft.fftshift(np.fft.fft(usbz, n=N_eff))
-        lsbfft = np.fft.fftshift(np.fft.fft(lsbz, n=N_eff))
-
-        usbpow = np.abs(usbfft) ** 2
-        lsbpow = np.abs(lsbfft) ** 2
-
-        # Now x and y always match length (N_eff)
-        ax.plot(freq / 1e6, usbpow, label=f"USB {usb_freq}MHz")
-        ax.scatter(freq / 1e6, usbpow, s=5)
-        ax.plot(freq / 1e6, lsbpow, alpha=0.3, label=f"LSB {lsb_freq}MHz")
-        ax.scatter(freq / 1e6, lsbpow, s=5)
-
-        ax.axvline(x=-sample_freq / 2e6, c="black", ls="--")
-        ax.axvline(x= sample_freq / 2e6, c="black", ls="--")
-        ax.axvline(x=0, c="black")
-        ax.set_yscale("log")
-        ax.legend(loc="lower left")
-
+    if usbdata_arr.ndim == 3 and usbdata_arr.shape[-1] >= 2:
+      usbin_phase = np.asarray(usbdata_arr[1, :, 0]).ravel()
+      usbquad = np.asarray(usbdata_arr[1, :, 1]).ravel()
+      lsbin_phase = np.asarray(lsbdata_arr[1, :, 0]).ravel()
+      lsbquad = np.asarray(lsbdata_arr[1, :, 1]).ravel()
+      usbz = usbin_phase + 1j * usbquad
+      lsbz = lsbin_phase + 1j * lsbquad
     else:
-        data = data[1]
-        # (your real-data plotting would go here)
+      usbz = np.asarray(usbdata_arr[1, :]).ravel()
+      lsbz = np.asarray(lsbdata_arr[1, :]).ravel()
 
-    # Title / labels
-    if signal_freq2 is None and usb_freq is None:
-        ax.set_title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
-    elif split:
-        ax.set_title(f"Power Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
-    else:
-        ax.set_title(f"Power Spectrum of Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals Sampled at {sample_freq/1e6}MHz")
+    N_eff = min(int(N), usbz.size, lsbz.size)
+    usbz = usbz[:N_eff]
+    lsbz = lsbz[:N_eff]
+
+    ts = 1.0 / sample_freq
+    freq = np.fft.fftshift(np.fft.fftfreq(N_eff, d=ts))
+
+    usbfft = np.fft.fftshift(np.fft.fft(usbz, n=N_eff))
+    lsbfft = np.fft.fftshift(np.fft.fft(lsbz, n=N_eff))
+
+    usbpow = np.abs(usbfft) ** 2
+    lsbpow = np.abs(lsbfft) ** 2
+
+    ax.plot(freq / 1e6, usbpow, label=f"USB {usb_freq}MHz",c="cornflowerblue")
+    ax.scatter(freq / 1e6, usbpow, s=5,c="cornflowerblue")
+    ax.plot(freq / 1e6, lsbpow, alpha=0.3, label=f"LSB {lsb_freq}MHz",c="red")
+    ax.scatter(freq / 1e6, lsbpow, s=5,c="red")
+
+    ax.axvline(x=-sample_freq / 2e6, c="black", ls="--")
+    ax.axvline(x= sample_freq / 2e6, c="black", ls="--")
+    ax.axvline(x=0, c="black")
+    ax.set_yscale("log")
+    ax.legend(loc="lower left")
+
+  else:
+    data = data[1]
+
+    # Titles
+  if signal_freq2 is None and usb_freq is None:
+    ax.set_title(f"Power Spectrum of {signal_freq}MHz Signal Sampled at {sample_freq/1e6}MHz")
+  elif split:
+    ax.set_title(f"Power Spectrum of Combined {signal_freq}MHz and {signal_freq2}Mhz Signal")
+  else:
+    ax.set_title(f"Power Spectrum of Mixed {signal_freq}MHz LO and {lsb_freq}/{usb_freq}Mhz RF Signals Sampled at {sample_freq/1e6}MHz")
 
     ax.set_xlabel("Frequency (MHz)")
     ax.set_ylabel("log Power (Arbitrary Units)")
