@@ -49,7 +49,7 @@ def plot_time(signal_freq,sample_freq,split,direct,N,data=None,usbdata=None,lsbd
 
   
   # Set Title
-  if signal_freq2 == None:
+  if signal_freq2 == None && usb_freq == None:
     plt.title(f"{signal_freq} Mhz Signal Sampled at {sample_freq/1e6} Mhz")
   elif split:
     plt.title(f"Combined {signal_freq} Mhz and {signal_freq2} Mhz Signal sampled at {sample_freq/1e6} Mhz")
