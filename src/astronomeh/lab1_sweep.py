@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import time
 import scipy.stats as stats
 
-sample_freq = 3.0e6 #Hz
-signal_freq = 6.2e6 #MHz
-signal_freq2 = 5.89e6
+sample_freq = 1.0e6 #Hz
+signal_freq = 1.5 #MHz
+signal_freq2 = 30
 nb = 2 																	#capture_data nblocks
 ns = 4096																#capture_data nsamples
 
@@ -23,7 +23,9 @@ path8 = os.path.join(path7, "average")
 path9 = os.path.join(path4,"zoomed")
 path10 = os.path.join(path6,"zoomedcarrier")
 path11 = os.path.join(path6,"zoomeddif")
-for p in [path, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11]:
+path12 = os.path.join(path2,"Quadrature")
+
+for p in [path, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11, path12]:
     os.makedirs(p, exist_ok=True)
 nfreq = 0
 datasum = 0
@@ -33,18 +35,10 @@ while sample_freq <= 3.2e6:
 	T = ns/sample_freq
 	
 # Create SDR Object.
-	sdr = ugradio.sdr.SDR(direct=True,sample_rate=sample_freq)
+	sdr = ugradio.sdr.SDR(direct=True,sample_rate=sample_freq,center_freq=29e6)
 # Capture data
 	the_data = sdr.capture_data(nsamples=ns,nblocks = nb)
-	if sdr.direct:
-		in_phase = the_data
-		quad = None
-		z = in_phase.astype(float)
-	else:
-		in_phase = the_data[:,:,0]
-		quad = the_data[:,:,1]
-		z = in_phase.astype(float) + 1j*quad.astype(float)
-		
+	print(the_data[1])
 	print("data successfully collected for", sample_freq)
 	file_name = f"digital_sin_{sample_freq}.npy"
 	full_path = os.path.join(path2, file_name)
@@ -55,6 +49,22 @@ while sample_freq <= 3.2e6:
 		'direct sampling':f'{sdr.direct}'
 	}
 	np.savez(full_path,the_data, attributes=metadata)
+	
+	
+	if sdr.direct:
+		sdr.close()
+		in_phase = the_data
+		quad = None
+		z = in_phase.astype(float)
+	else:
+		sdr.close()
+		in_phase = the_data[:,:,0]
+		quad = the_data[:,:,1]
+		z = in_phase.astype(float) + 1j*quad.astype(float)
+		
+	
+	print(z.shape)
+	print(z[1])
 # Dump buffer block at i=0
 	i=1
 	means=[]
@@ -76,9 +86,9 @@ while sample_freq <= 3.2e6:
 		#ax.set_ylim(-150,150)
 		
 # Titles
-		#ax.set_title(f"{signal_freq} MHz signal sampled at {sample_freq} Hz")
+		ax.set_title(f"{signal_freq} MHz signal sampled at {sample_freq} Hz")
 		#ax.set_title(f"Noise signal sampled at {sample_freq} Hz Window {i}")
-		ax.set_title(f"Mixed {signal_freq} MHz and {signal_freq2} MHz signal sampled at {sample_freq} Hz")
+		#ax.set_title(f"Mixed {signal_freq} MHz and {signal_freq2} MHz signal sampled at {sample_freq} Hz")
 		
 		ax.set_xlabel("Time (s)")
 		ax.set_ylabel("Amplitude")
@@ -91,7 +101,7 @@ while sample_freq <= 3.2e6:
 		fig.savefig(full_path, bbox_inches="tight")
 		plt.close(fig)
 		print("signal plot created")
-		sdr.close()
+		
 	
 # Plot Voltage Spectrum
 
@@ -123,9 +133,9 @@ while sample_freq <= 3.2e6:
 		ax.axvline(x=-sample_freq/2, linestyle = '--')
 		ax.axvline(x=0, linestyle = '--')
 # Titles
-		#ax.set_title(f"Voltage Spectrum of {signal_freq} MHz signal sampled at {sample_freq} Hz")
+		ax.set_title(f"Voltage Spectrum of {signal_freq} MHz signal sampled at {sample_freq} Hz")
 		#ax.set_title(f"Voltage Spectrum of Noise signal sampled at {sample_freq} Hz")
-		ax.set_title(f"Voltage Spectrum of Mixed {signal_freq} MHz and {signal_freq2} MHz signal sampled at {sample_freq} Hz")
+		#ax.set_title(f"Voltage Spectrum of Mixed {signal_freq} MHz and {signal_freq2} MHz signal sampled at {sample_freq} Hz")
 		
 		ax.set_xlabel("Frequency (Hz)")
 		ax.set_ylabel("Voltage")
@@ -159,6 +169,7 @@ while sample_freq <= 3.2e6:
 		ax.set_title(f"Power Spectrum of {signal_freq} MHz signal sampled at {sample_freq} Hz")
 		#ax.set_title(f"Power Spectrum of Noise signal sampled at {sample_freq} Hz")
 		#ax.set_title(f"Power Spectrum of Mixed {signal_freq} MHz and {signal_freq2} MHz signal sampled at {sample_freq} Hz")
+		
 		ax.set_xlabel("Frequency (Hz)")
 		ax.set_ylabel("Power")
 		ax.set_yscale("log")
@@ -288,8 +299,10 @@ while sample_freq <= 3.2e6:
 	plt.axvline(-2*sample_freq,ls="--",c="red")
 	plt.axvline(-sample_freq,ls="--",c="red")
 	plt.axvline(sample_freq,ls="--",c="red")
+	
 	plt.title(f"Power spectrum with small frequency separation at {signal_freq} MHz samples at {sample_freq} Hz")
 	#plt.title(f"Power spectrum with small frequency separation of Noise samples at {sample_freq} Hz")
+	
 	#plt.yscale("log")
 	plt.xlabel("Frequencies")
 	#plt.xlim(.49e6,.51e6)
