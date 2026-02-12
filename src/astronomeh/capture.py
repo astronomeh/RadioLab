@@ -23,25 +23,23 @@ os.makedirs(path, exist_ok=True)
 nfreq = 0
 datasum = 0
 
-def capture(fs,RF,LO,sweep_to,nb,ns,unix_time):
-  while fs <= sweep_to:
-    sdro = ugradio.sdr.SDR(direct=True,sample_rate=fs,center_freq=Lo)
-    data = sdro.capture_data(nsamples=ns,nblocks=nb)
+while fs <= sweep_to:
+	sdro = ugradio.sdr.SDR(direct=True,sample_rate=fs,center_freq=Lo)
+	data = sdro.capture_data(nsamples=ns,nblocks=nb)
     file_name = f"LOat{LO}_FSat{fs}"
     full_path = os.path.join(path, file_name)
   	metadata = {
   		'sample frequency':f'{fs}',
   		'signal frequency LO':f'{LO}',
   		'signal frequency RF':f'{RF}',
-      'number of samples per block':f'{ns}',
-      'number of blocks':f'{nb}',
+      	'number of samples per block':f'{ns}',
+      	'number of blocks':f'{nb}',
   		'direct sampling':f'{sdro.direct}',
-      'unix time':f'{unix_time}'
+      	'unix time':f'{unix_time}'
   	}
   	np.savez(full_path,data, attributes=metadata)
     sdro.close()
     fs+=1e5   # 0.1MHz steps for sweep
-
 
 	
 
