@@ -15,11 +15,11 @@ ns = 4096	                        # nsamples in SDR capture
 unix_time = time.time()           # Get capture time
 
 to_datetime = datetime.datetime.fromtimestamp(unix_time)
-yyyymmdd = to_datetime.strftime("%Y%m%d")
+yyyymmdd = to_datetime.strftime("%Y_%m_%d")
+hhmmss = to_datetime.strftime("%H_%M_%S")
 parent_directory = os.getcwd()
-output_folder = f"{yyyymmdd[:4]}_{yyyymmdd[4:6]}_{yyyymmdd[6:]}"
-path = os.path.join(parent_directory, output_folder)
-os.makedirs(path, exist_ok=True)
+path = os.path.join(parent_directory, yyyymmdd)
+path2 = os.path.join(path, hhmmss)
 nfreq = 0
 datasum = 0
 
