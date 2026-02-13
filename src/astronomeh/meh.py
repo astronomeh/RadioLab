@@ -8,7 +8,7 @@ import scipy.stats as stats
 
 
 # Capture and save data
-def capture(fs=2e6,LO=1.420405e9,ns=4096,nb=2,fs_step=1e5,sweep_to=2e6,RF=None,dir=False):
+def cap(fs=2e6,LO=1.420405e9,ns=4096,nb=2,fs_step=1e5,sweep_to=2e6,RF=None,dir=False):
 	unixtime = time.time()
 	to_datetime = datetime.datetime.fromtimestamp(unixtime)
 	yyyymmdd = to_datetime.strftime("%Y_%m_%d")
