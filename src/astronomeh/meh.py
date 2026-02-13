@@ -14,7 +14,7 @@ def capture(fs,LO,ns,nb,time=time.time(),fs_step=1e5,sweep_to=2e6,RF=None,dir=Fa
 	path = os.path.join(parent_directory, yyyymmdd)
 	path2 = os.path.join(path, hhmmss)
 	for p in [path, path2]:
-        os.makedirs(p, exist_ok=True)
+    	os.makedirs(p, exist_ok=True)
 	nfreq = 0
 	datasum = 0
 	all_data = []
